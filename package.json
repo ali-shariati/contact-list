@@ -1,0 +1,18 @@
+{
+  "name": "mahan-package",
+  "version": "1.0.0",
+  "description": "train node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "calculation",
+    "test"
+  ],
+  "author": "mahan-webdev",
+  "license": "ISC",
+  "dependencies": {
+    "cowsay": "^1.6.0"
+  }
+}
