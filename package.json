@@ -2,6 +2,7 @@
   "name": "mahan-package",
   "version": "1.0.0",
   "description": "train node",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,6 +14,7 @@
   "author": "mahan-webdev",
   "license": "ISC",
   "dependencies": {
-    "cowsay": "^1.6.0"
+    "cowsay": "^1.6.0",
+    "process": "^0.11.10"
   }
 }

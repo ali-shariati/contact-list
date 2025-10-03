@@ -1,0 +1,22 @@
+{
+  "name": "contact-list",
+  "version": "1.0.0",
+  "description": "Contact List",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Contact"
+  ],
+  "author": "Mahan",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ali-shariati/contact-list.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ali-shariati/contact-list/issues"
+  },
+  "homepage": "https://github.com/ali-shariati/contact-list#readme"
+}
