@@ -1,18 +1,25 @@
 {
-  "name": "mahan-package",
+  "name": "contact-list",
   "version": "1.0.0",
-  "description": "train node",
-  "type": "module",
+  "description": "Contact List",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "calculation",
-    "test"
+    "Contact"
   ],
-  "author": "mahan-webdev",
-  "license": "ISC",
+  "author": "Mahan",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ali-shariati/contact-list.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ali-shariati/contact-list/issues"
+  },
+  "homepage": "https://github.com/ali-shariati/contact-list#readme",
   "dependencies": {
     "cowsay": "^1.6.0",
     "process": "^0.11.10"
