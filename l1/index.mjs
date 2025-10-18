@@ -1,7 +1,14 @@
 import http from "http";
+import * as url from "node:url";
 
 const server = http.createServer((req, res) => {
-    res.write('Hello World!');
+    const urlData = url.parse(req.url, true);
+    const {name} = urlData.query;
+
+    const message = name
+    ? `Hello ${name}` : 'Hello World'
+
+    res.write(message);
     res.end();
 });
 
