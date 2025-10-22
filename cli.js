@@ -1,27 +1,16 @@
 import readline from 'readline/promises';
 import {stdin as input, stdout as output  } from 'process'
 import fs from 'fs/promises';
-import * as cowsay from 'cowsay';
+import {loadContactList, CONTACT_LIST_FILE_PATH, formatContactList} from "./services.js";
 
-const CONTACT_LIST_FILE_PATH ='./data/contact-list.json';
+
 const rl = readline.createInterface({input, output});
 
-console.log(
-    cowsay.say({text:'<-- Contact List -->'})
-);
+console.log('<-- Contact List -->');
 
 const contactList = [];
 
-async function loadContactList() {
-    try {
-        const contactListJson = await fs.readFile(CONTACT_LIST_FILE_PATH, 'utf8');
-        contactList.push(
-            ...JSON.parse(contactListJson)
-        )
-    }catch(err) {
-        throw err;
-    }
-}
+
 
 async function saveContactList() {
     try {
@@ -89,10 +78,8 @@ async function updateContactList() {
     console.log('Contact updated.');
 }
 
-function showContactList(){
-    const formatedList = contactList
-        .map(({ id, firstName, lastName }) => `#${id} ${firstName}  ${lastName}`)
-        .join('\n');
+export function showContactList(){
+    const formatedList = formatContactList(contactList);
     console.log('Contact List :')
     console.log(formatedList)
 }
@@ -114,7 +101,7 @@ async function help() {
     } else if (action === 'd') {
         await deleteContactList();
     } else if (action === 'u') {
-       await updateContactList();
+        await updateContactList();
     } else if (action === 'q') {
         quit()
         return
@@ -126,7 +113,8 @@ async function help() {
 }
 
 async function main() {
-    await loadContactList();
+    const loadContacts = await loadContactList();
+    contactList.push(...loadContacts);
     await help();
 }
 await main();
