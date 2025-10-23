@@ -1,7 +1,11 @@
 import readline from 'readline/promises';
 import {stdin as input, stdout as output  } from 'process'
-import fs from 'fs/promises';
-import {loadContactList, CONTACT_LIST_FILE_PATH, formatContactList} from "./services.js";
+import {
+    loadContactList,
+    formatContactList,
+    generateContactId,
+    saveContactList
+} from "./services.js";
 
 
 const rl = readline.createInterface({input, output});
@@ -10,23 +14,10 @@ console.log('<-- Contact List -->');
 
 const contactList = [];
 
-
-
-async function saveContactList() {
-    try {
-        const contactListJson = JSON.stringify(contactList);
-        await fs.writeFile(CONTACT_LIST_FILE_PATH, contactListJson);
-
-    }catch(err) {
-        throw err;
-    }
-}
-
-async function addNewContact() {
+async function createNewContact() {
     const firstName = await rl.question('First name: ');
     const lastName = await rl.question('Last name: ');
-    const lastContact = contactList[contactList.length - 1];
-    const id = lastContact ? lastContact.id + 1 : 0;
+ const id = generateContactId(contactList);
 
     const newContact = {
         id,
@@ -34,7 +25,7 @@ async function addNewContact() {
         lastName,
     }
     contactList.push(newContact)
-    await saveContactList();
+    saveContactList(contactList);
 }
 
 async function deleteContactList() {
@@ -50,7 +41,7 @@ async function deleteContactList() {
         return;
     }
     contactList.splice(contactIndex, 1);
-    await saveContactList();
+    await saveContactList(contactList);
 }
 
 async function updateContactList() {
@@ -95,7 +86,7 @@ async function help() {
     console.log('-------------------------')
     const action = await rl.question('Enter your input : ');
     if (action === 'n') {
-        await addNewContact();
+        await createNewContact();
     } else if (action === 's') {
         showContactList();
     } else if (action === 'd') {

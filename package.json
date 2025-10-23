@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/ali-shariati/contact-list#readme",
   "dependencies": {
+    "body-parser": "^2.2.0",
     "cowsay": "^1.6.0",
     "express": "^5.1.0",
     "process": "^0.11.10"

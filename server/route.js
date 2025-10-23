@@ -1,5 +1,5 @@
 import express from "express";
-import {formatContactList, loadContactList} from "../services.js";
+import {formatContactList, generateContactId, loadContactList, saveContactList} from "../services.js";
 
 const router = express.Router();
 const contactList = [];
@@ -12,6 +12,20 @@ router.get("/list", (req, res) => {
         return;
     }
     res.json(contactList);
+})
+
+router.post("/create", (req, res) => {
+    const {firstName, lastName} = req.body;
+    const id =  generateContactId(contactList);
+
+    const newContact = {
+        id,
+        firstName ,
+        lastName,
+    }
+    contactList.push(newContact)
+    saveContactList(contactList);
+    res.send(`The Contact ${firstName} ${lastName} has been added successfully.`);
 })
 
 const loadContacts = await loadContactList();
