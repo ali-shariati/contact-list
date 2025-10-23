@@ -22,6 +22,7 @@
   "homepage": "https://github.com/ali-shariati/contact-list#readme",
   "dependencies": {
     "cowsay": "^1.6.0",
+    "express": "^5.1.0",
     "process": "^0.11.10"
   }
 }
