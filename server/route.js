@@ -1,6 +1,7 @@
 import express from "express";
 import {formatContactList, generateContactId, loadContactList, saveContactList} from "../services.js";
 
+
 const router = express.Router();
 const contactList = [];
 
@@ -26,7 +27,23 @@ router.post("/create", (req, res) => {
     contactList.push(newContact)
     saveContactList(contactList);
     res.send(`The Contact ${firstName} ${lastName} has been added successfully.`);
-})
+});
+
+router.delete("/:id", (req, res) => {
+    if (contactList.length < 1) {
+        res.status(400).send({message: "Contact Not Found"});
+        return;
+    }
+
+    const contactIndex = contactList.findIndex(({id}) => id === Number(req.params.id));
+    if (contactIndex < 0) {
+        res.status(400).send({message: "Invalid ID"});
+        return;
+    }
+    contactList.splice(contactIndex, 1);
+    saveContactList(contactList);
+    res.send(`Contact ${req.params.id} has been deleted.`);
+});
 
 const loadContacts = await loadContactList();
 contactList.push(...loadContacts);
