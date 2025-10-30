@@ -3,10 +3,11 @@ import ContactModel from "./contact.js";
 import ContactCategoryModel from "./contactCategory.js"
 
 const sequelize = new Sequelize({
-    username: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
+    username: 'admin',
+    password: 'adminpass',
+    database: 'appdb',
     dialect: "postgres",
+    logging: false,
 })
 
 const Contact = ContactModel(sequelize)
