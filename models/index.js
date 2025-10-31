@@ -13,5 +13,8 @@ const sequelize = new Sequelize({
 const Contact = ContactModel(sequelize)
 const ContactCategory = ContactCategoryModel(sequelize)
 
+Contact.hasOne(ContactCategory);
+Contact.belongsTo(Contact)
+
 export {sequelize};
 export {Contact, ContactCategory};
