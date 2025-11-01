@@ -1,9 +1,8 @@
 import express from "express";
-import {formatContactList, loadContactList, saveContactList} from "../services.js";
+import {formatContactList} from "../services.js";
 import {Contact} from "../models/index.js"
 
 const router = express.Router();
-const contactList = [];
 
 router.get("/list", async (req, res) => {
 
@@ -41,45 +40,35 @@ router.post("/create", async (req, res) => {
     }
 });
 
-router.delete("/:id", (req, res) => {
-    if (contactList.length < 1) {
-        res.status(400).send({message: "Contact Not Found"});
-        return;
+router.delete("/:id", async (req, res) => {
+    try{
+        await Contact.destroy({where: {id: req.params.id}});
+        res.send(`Contact ${req.params.id} has been deleted.`);
     }
-
-    const contactIndex = contactList.findIndex(({id}) => id === Number(req.params.id));
-    if (contactIndex < 0) {
-        res.status(400).send({message: "Invalid ID"});
-        return;
+    catch(err){
+        res.status(400).send(
+            {message: "Something went wrong",
+                err
+            });
     }
-    contactList.splice(contactIndex, 1);
-    saveContactList(contactList);
-    res.send(`Contact ${req.params.id} has been deleted.`);
 });
 
-router.put("/:id", (req, res) => {
-    if (contactList.length < 1) {
-        res.status(400).send({message: "Contact Not Found"});
-        return;
+router.put("/:id", async (req, res) => {
+    try {
+        const {firstName, lastName, mobileNumber, isFavorite} = req.body;
+        await Contact.update(
+            {
+                firstName,
+                lastName,
+                mobileNumber,
+                isFavorite,
+            },
+            {where: {id: req.params.id}}
+        )
+        res.send(`Contact ${req.params.id} has been updated successfully.`);
+    } catch (err){
+        res.status(400).send({message: "Something went wrong",err});
     }
-    const contactIndex = contactList.findIndex(({id}) => id === Number(req.params.id));
-    if (contactIndex < 0) {
-        res.status(400).send({message: "Invalid ID"});
-        return;
-    }
-    const {firstName, lastName} = req.body;
-    const contact = contactList[contactIndex]
-    const updateContact = {
-        ...contact,
-        firstName: firstName || contact.firstName,
-        lastName: lastName || contact.lastName,
-    }
-    contactList.splice(contactIndex, 1,updateContact);
-    saveContactList(contactList);
-    res.send(`Contact ${req.params.id} has been updated successfully.`);
 })
-
-const loadContacts = await loadContactList();
-contactList.push(...loadContacts);
 
 export default router;
