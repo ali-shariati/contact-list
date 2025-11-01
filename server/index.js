@@ -4,7 +4,6 @@ import bodyParser from "body-parser";
 import {sequelize} from "../models/index.js";
 
 const app = express();
-console.log('<-- Contact List -->');
 
 function loggerMiddleware(req, res, next) {
     console.log("Request: ", req.method , req.url)

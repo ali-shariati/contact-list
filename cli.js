@@ -1,76 +1,35 @@
 import readline from 'readline/promises';
 import {stdin as input, stdout as output  } from 'process'
-import {
-    loadContactList,
-    formatContactList,
-    generateContactId,
-    saveContactList
-} from "./services.js";
-
+import { formatContactList } from "./services.js";
+import {Contact, sequelize} from "./models/index.js";
 
 const rl = readline.createInterface({input, output});
-
-console.log('<-- Contact List -->');
-
-const contactList = [];
 
 async function createNewContact() {
     const firstName = await rl.question('First name: ');
     const lastName = await rl.question('Last name: ');
- const id = generateContactId(contactList);
+    const mobileNumber = await rl.question('Mobile number: ');
+    const isFavorite = await rl.question('Is favorite(Default: no): ');
 
-    const newContact = {
-        id,
+    await Contact.create  ({
         firstName ,
         lastName,
-    }
-    contactList.push(newContact)
-    saveContactList(contactList);
+        mobileNumber ,
+        isFavorite: ['yes', 'Yes', 'Yes'].includes(isFavorite) ,
+    });
 }
 
 async function deleteContactList() {
-    if (contactList.length < 1) {
-        console.error('There is no contact in this list!');
-        return;
-    }
-    showContactList();
-    const contactID = await rl.question('Contact ID: ');
-    const contactIndex = contactList.findIndex(({id}) => id === Number(contactID));
-    if (contactIndex < 0) {
-        console.error('Invalid ID');
-        return;
-    }
-    contactList.splice(contactIndex, 1);
-    await saveContactList(contactList);
+    await showContactList();
+    const id =  await rl.question('Delete ID: ');
+    await Contact.destroy({
+        where: { id }
+    });
 }
 
-async function updateContactList() {
-    if (contactList.length < 1) {
-        console.error('There is no contact in this list!');
-    }
-    const rowId = await rl.question('Contact ID: ');
-    const selectedId = Number(rowId);
-    const idx = contactList.findIndex(contactId => contactId.id === selectedId);
-
-    if (idx < 0){
-        console.error('Invalid ID');
-    }
-
-    const currentContact = contactList[idx];
-    const newFirstName = await rl.question(`First Name [${currentContact.firstName}]: `);
-    const newLastName = await rl.question(`Last Name [${currentContact.lastName}]: `);
-
-    contactList[idx] ={
-        ...currentContact,
-        firstName: newFirstName,
-        lastName: newLastName,
-    }
-    await saveContactList();
-    console.log('Contact updated.');
-}
-
-export function showContactList(){
-    const formatedList = formatContactList(contactList);
+async function showContactList(){
+    const contacts = await Contact.findAll();
+    const formatedList = formatContactList(contacts);
     console.log('Contact List :')
     console.log(formatedList)
 }
@@ -82,17 +41,15 @@ function quit(){
 
 async function help() {
     console.log('-------------------------')
-    console.log('n: Add new contact\nd: Delete contact\ns: Show contacts\nu: Update contact\nq: Quit');
+    console.log('n: Add new contact\nd: Delete contact\ns: Show contacts\nq: Quit');
     console.log('-------------------------')
     const action = await rl.question('Enter your input : ');
     if (action === 'n') {
         await createNewContact();
     } else if (action === 's') {
-        showContactList();
+        await showContactList();
     } else if (action === 'd') {
         await deleteContactList();
-    } else if (action === 'u') {
-        await updateContactList();
     } else if (action === 'q') {
         quit()
         return
@@ -104,8 +61,13 @@ async function help() {
 }
 
 async function main() {
-    const loadContacts = await loadContactList();
-    contactList.push(...loadContacts);
-    await help();
+    console.log('<-- Contact List -->');
+    try {
+        await sequelize.sync({ force: false });
+        console.log('[All models were synchronized successfully.]');
+        await help();
+    } catch(err){
+        console.log('Error in syncing models: ', err);
+    }
 }
 await main();
