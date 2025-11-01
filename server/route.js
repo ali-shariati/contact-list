@@ -18,7 +18,7 @@ router.get("/list", async (req, res) => {
         }
         res.json(contacts);
     }catch(err){
-       res.status(400)
+       res.status(500).send({message: "Server error", err});
     }
 
 })
