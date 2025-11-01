@@ -9,7 +9,7 @@ const contactList = [];
 router.get("/list", async (req, res) => {
 
     try{
-         const contacts = await Contact.findAll
+         const contacts = await Contact.findAll()
         if(req.query.format){
             const responseData = `<pre>${formatContactList(contactList)}</pre>`;
             res.type('html');
