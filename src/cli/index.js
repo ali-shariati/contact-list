@@ -1,7 +1,7 @@
 import readline from 'readline/promises';
 import {stdin as input, stdout as output  } from 'process'
-import { formatContactList } from "./utils.js";
-import {Contact, sequelize} from "./models/index.js";
+import { formatContactList } from "../utils.js";
+import {Contact, sequelize} from "../models/index.js";
 
 const rl = readline.createInterface({input, output});
 
