@@ -1,5 +1,5 @@
 import express from "express";
-import {formatContactList} from "../services.js";
+import {formatContactList} from "../utils.js";
 import {Contact} from "../models/index.js"
 
 const router = express.Router();
