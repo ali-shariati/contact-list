@@ -9,6 +9,7 @@ try {
     console.log('All models were synchronized successfully.');
 } catch (error) {
     console.log('Error in syncing models',error);
+    throw error;
 }
 const app = express();
 
