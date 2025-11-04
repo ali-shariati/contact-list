@@ -1,10 +1,10 @@
 import {Sequelize} from "sequelize";
 import ContactModel from "./contact.js";
 import ContactCategoryModel from "./contactCategory.js"
-import {config} from "process";
+import configs from "../configs/database.js";
 
 const sequelize = new Sequelize(
-    config[process.env.NODE_ENV || 'development'],
+    configs[process.env.NODE_ENV || 'development'],
 )
 
 const Contact = ContactModel(sequelize)

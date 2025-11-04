@@ -3,6 +3,7 @@ import router from "./routes/contacts.js"
 import bodyParser from "body-parser";
 import {sequelize} from "../models/index.js";
 import {loggerMiddleware} from "./meddlewares/logger.js";
+import configs from "../configs/server.js";
 
 try {
     await sequelize.sync({ alter: true });
@@ -17,4 +18,4 @@ app.disable('etag')
 app.use(loggerMiddleware);
 app.use(bodyParser.urlencoded({extended: false}));
 app.use("/contacts", router);
-app.listen(3000, ()=>{console.log('Server started on port 3000')})
+app.listen(configs.port, ()=>{console.log('Server started on port 3000')})

@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cli": " .env && node ./src/cli",
-    "server": ".env && node ./src/server"
+    "cli": " node --env-file=.env ./src/cli",
+    "server": "node --env-file=.env ./src/server"
   },
   "keywords": [
     "Contact"
