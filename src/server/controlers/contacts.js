@@ -1,29 +1,52 @@
+import multer from "multer";
 import {formatContactList} from "../../utils.js";
 import {Contact} from "../../models/index.js";
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 export async function getContacts(req, res) {
     try{
         const contacts = await Contact.findAll()
         if(req.query.format){
-            const responseData = `<pre>${formatContactList(contactList)}</pre>`;
+            const responseData = `<pre>${formatContactList(contacts)}</pre>`;
             res.type('html');
             res.send(responseData);
             return;
         }
-        res.json(contacts);
+        const normalizedContacts = contacts.map(({ dataValues: {id, profilePicture, ...rest}})=> ({
+            id,
+            profilePicture: profilePicture ? `/images/profile-picture/${id}` : null,
+            ...rest
+        }))
+        res.json(normalizedContacts);
     }catch(err){
         res.status(500).send({message: "Server error", err});
     }
 }
 
-export async function createContacts(req, res) {
-    const {firstName, lastName, mobileNumber, isFavorite } = req.body;
+export async function getProfilePicture(req, res) {
+    try {
+        const { profilePicture } = await Contact.findOne({
+            attributes: ['profilePicture'],
+            where: {id: req.params.id}
+        })
+        res.type('image/jpeg')
+        res.send(profilePicture)
+    }catch(err){
+        res.status(500).send({message: "Something went wrong", err});
+    }
+}
+
+async function createContactsCtl(req, res) {
+    const { firstName, lastName, mobileNumber, isFavorite } = req.body;
+    const { buffer: profilePicture } =req.file || {};
     try {
         const {id} =  await Contact.create({
             firstName,
             lastName,
             mobileNumber,
             isFavorite,
+            profilePicture,
         })
         res.send(`The Contact "${id} ${firstName} ${lastName}" has been added successfully.`);
     }catch(err){
@@ -34,6 +57,11 @@ export async function createContacts(req, res) {
         );
     }
 }
+
+export const createContacts =[
+    upload.single("profilePicture"),
+    createContactsCtl,
+]
 
 export async function deleteContacts(req, res) {
     try{

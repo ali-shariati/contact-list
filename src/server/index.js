@@ -1,5 +1,6 @@
 import express from "express";
-import router from "./routes/contacts.js"
+import contactRoutes from "./routes/contacts.js"
+import imagestRoutes from "./routes/images.js"
 import bodyParser from "body-parser";
 import {sequelize} from "../models/index.js";
 import {loggerMiddleware} from "./meddlewares/logger.js";
@@ -17,5 +18,6 @@ const app = express();
 app.disable('etag')
 app.use(loggerMiddleware);
 app.use(bodyParser.urlencoded({extended: false}));
-app.use("/contacts", router);
+app.use("/contacts", contactRoutes);
+app.use("/images", imagestRoutes);
 app.listen(configs.port, ()=>{console.log('Server started on port 3000')})
