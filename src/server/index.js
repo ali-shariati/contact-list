@@ -1,14 +1,8 @@
 import express from "express";
-import router from "./route.js"
+import router from "./routes/contacts.js"
 import bodyParser from "body-parser";
 import {sequelize} from "../models/index.js";
-
-const app = express();
-
-function loggerMiddleware(req, res, next) {
-    console.log("Request: ", req.method , req.url)
-    next();
-}
+import {loggerMiddleware} from "./meddlewares/logger.js";
 
 try {
     await sequelize.sync({ alter: true });
@@ -16,7 +10,7 @@ try {
 } catch (error) {
     console.log('Error in syncing models',error);
 }
-
+const app = express();
 
 app.disable('etag')
 app.use(loggerMiddleware);

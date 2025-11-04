@@ -1,11 +1,7 @@
-import express from "express";
-import {formatContactList} from "../utils.js";
-import {Contact} from "../models/index.js"
+import {formatContactList} from "../../utils.js";
+import {Contact} from "../../models/index.js";
 
-const router = express.Router();
-
-router.get("/list", async (req, res) => {
-
+export async function getContacts(req, res) {
     try{
         const contacts = await Contact.findAll()
         if(req.query.format){
@@ -18,10 +14,9 @@ router.get("/list", async (req, res) => {
     }catch(err){
         res.status(500).send({message: "Server error", err});
     }
+}
 
-})
-
-router.post("/create", async (req, res) => {
+export async function createContacts(req, res) {
     const {firstName, lastName, mobileNumber, isFavorite } = req.body;
     try {
         const {id} =  await Contact.create({
@@ -38,9 +33,9 @@ router.post("/create", async (req, res) => {
             }
         );
     }
-});
+}
 
-router.delete("/:id", async (req, res) => {
+export async function deleteContacts(req, res) {
     try{
         await Contact.destroy({where: {id: req.params.id}});
         res.send(`Contact ${req.params.id} has been deleted.`);
@@ -51,9 +46,9 @@ router.delete("/:id", async (req, res) => {
                 err
             });
     }
-});
+}
 
-router.put("/:id", async (req, res) => {
+export async function updateContacts(req, res) {
     try {
         const {firstName, lastName, mobileNumber, isFavorite} = req.body;
         await Contact.update(
@@ -69,6 +64,4 @@ router.put("/:id", async (req, res) => {
     } catch (err){
         res.status(400).send({message: "Something went wrong",err});
     }
-})
-
-export default router;
+}
