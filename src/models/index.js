@@ -4,7 +4,7 @@ import ContactCategoryModel from "./contactCategory.js"
 import {config} from "process";
 
 const sequelize = new Sequelize(
-    config[p]
+    config[process.env.NODE_ENV || 'development'],
 )
 
 const Contact = ContactModel(sequelize)
