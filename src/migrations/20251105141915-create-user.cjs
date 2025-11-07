@@ -31,16 +31,16 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.addColumn('contacts', 'UserId', {
-      type: Sequelize.INTEGER,
-      references: {
-        model: 'Users',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL',
-
-    })
+    // await queryInterface.addColumn('contacts', 'UserId', {
+    //   type: Sequelize.INTEGER,
+    //   references: {
+    //     model: 'Users',
+    //     key: 'id'
+    //   },
+    //   onUpdate: 'CASCADE',
+    //   onDelete: 'SET NULL',
+    //
+    // })
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.removeColumn('contacts', 'UserId');

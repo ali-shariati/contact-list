@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/ali-shariati/contact-list#readme",
   "dependencies": {
+    "@faker-js/faker": "^10.1.0",
     "body-parser": "^2.2.0",
     "cowsay": "^1.6.0",
     "express": "^5.1.0",
