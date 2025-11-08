@@ -1,6 +1,7 @@
 import multer from "multer";
 import {formatContactList} from "../../utils.js";
 import {Contact} from "../../models/index.js";
+import {Sequelize} from 'sequelize';
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -9,9 +10,19 @@ async function loadContacts(req, res, next) {
         const {
             sort,
             desc,
+            q,
         } = req.query;
 
+        const where = {};
         const order = [];
+
+        if (q){
+            where[Sequelize.Op.or] =[
+                {firstName: {[Sequelize.Op.like]: `%${q}%`}},
+                {lastName: {[Sequelize.Op.like]: `%${q}%`}},
+                {mobileNumber: {[Sequelize.Op.like]: `%${q}%`}},
+            ]
+        }
 
         if (sort) {
             order.push(
@@ -20,8 +31,9 @@ async function loadContacts(req, res, next) {
         }
 
         const contacts = await Contact.findAll({
-                order,
-            });
+            where,
+            order,
+        });
 
         req.locals = {
             contacts,
@@ -34,7 +46,7 @@ async function loadContacts(req, res, next) {
     }
 }
 
-async function getContactsFormatted (req, res, next) {
+function getContactsFormatted (req, res, next) {
     if(req.query.format !== true) {
         return next();
     }
@@ -44,7 +56,7 @@ async function getContactsFormatted (req, res, next) {
     res.send(responseData);
 }
 
-async function getContactsJSON(req, res) {
+ function getContactsJSON(req, res) {
     const {contacts} = req.locals;
     const normalizedContacts = contacts.map(({ dataValues: {id, profilePicture, ...rest}})=> ({
         id,
