@@ -3,14 +3,16 @@ import {formatContactList} from "../../utils.js";
 import {Contact} from "../../models/index.js";
 import {Sequelize} from 'sequelize';
 
+const CONTACTS_LIST_PAGE_SIZE = 10;
+
 const upload = multer({ storage: multer.memoryStorage() });
 
 async function loadContacts(req, res, next) {
-    try{
         const {
             sort,
             desc,
             q,
+            page = 1,
         } = req.query;
 
         const where = {};
@@ -30,9 +32,12 @@ async function loadContacts(req, res, next) {
             );
         }
 
+    try{
         const contacts = await Contact.findAll({
             where,
             order,
+            limit: CONTACTS_LIST_PAGE_SIZE,
+            offset: Math.max((page - 1) * CONTACTS_LIST_PAGE_SIZE),
         });
 
         req.locals = {
@@ -56,7 +61,7 @@ function getContactsFormatted (req, res, next) {
     res.send(responseData);
 }
 
- function getContactsJSON(req, res) {
+function getContactsJSON(req, res) {
     const {contacts} = req.locals;
     const normalizedContacts = contacts.map(({ dataValues: {id, profilePicture, ...rest}})=> ({
         id,
